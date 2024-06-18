@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Github Commit Feed</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      .notification {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .notification-header {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Github Commit Feed</h1>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const socket = io();
+        socket.on("new_commit", function (data) {
+          const notificationDiv = document.createElement("div");
+          notificationDiv.className = "notification";
+
+          const header = document.createElement("div");
+          header.className = "notification-header";
+          header.textContent = `New commit in ${data.repository.name}`;
+
+          const content = document.createElement("div");
+          content.textContent = `Commit by ${data.pusher.name}: "${data.head_commit.message}"`;
+
+          notificationDiv.appendChild(header);
+          notificationDiv.appendChild(content);
+          document.body.appendChild(notificationDiv);
+        });
+      });
+    </script>
+  </body>
+</html>
